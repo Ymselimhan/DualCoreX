@@ -1,0 +1,15 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=BTRFS Snapshot Yöneticisi
+Name[tr]=BTRFS Snapshot Yöneticisi
+GenericName=Sistem Yedekleme Aracı
+Comment=Pardus için BTRFS anlık görüntü (snapshot) ve geri yükleme aracı
+Comment[tr]=Pardus için BTRFS anlık görüntü (snapshot) ve geri yükleme aracı
+Exec=python3 /home/yms/Masaüstü/pardus/1-BTRFS_Snapshot_Araci/main.py
+Icon=/home/yms/Masaüstü/pardus/1-BTRFS_Snapshot_Araci/icon.png
+Terminal=false
+Categories=System;Settings;Utility;
+Keywords=btrfs;snapshot;yedek;backup;restore;geri yükleme;
+StartupNotify=true
+StartupWMClass=btrfs-snapshot-manager

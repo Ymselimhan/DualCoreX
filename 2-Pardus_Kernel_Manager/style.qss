@@ -1,0 +1,523 @@
+/* =====================================================
+   PARDUS KERNEL MANAGER — QSS STYLE SHEET
+   v2.0 — Modernized Glassmorphism & Segmented Control Theme
+   ===================================================== */
+
+/* ================================================================
+   KOYU TEMA (theme="dark")
+   ================================================================ */
+
+QMainWindow[theme="dark"],
+QWidget[theme="dark"] {
+    background-color: #0F1117;
+    color: #E2E5EE;
+    font-family: "Inter", "Noto Sans", "Segoe UI", sans-serif;
+    font-size: 13px;
+}
+
+QWidget#centralWidget[theme="dark"] {
+    background-color: #0F1117;
+}
+
+QWidget#buttonContainer[theme="dark"] {
+    background-color: transparent;
+    background: transparent;
+    border: none;
+}
+
+/* Banner / Header - Glassmorphic */
+QFrame#bannerFrame[theme="dark"] {
+    background-color: #161822;
+    border: 1px solid #23273a;
+    border-radius: 12px;
+}
+
+QLabel#bannerTitle[theme="dark"] {
+    font-size: 19px;
+    font-weight: 800;
+    color: #FFFFFF;
+    background: transparent;
+}
+
+QLabel#bannerSubtitle[theme="dark"] {
+    font-size: 12px;
+    color: #8A94A6;
+    background: transparent;
+}
+
+/* Glowing Neon Badge */
+QLabel#currentKernelBadge[theme="dark"] {
+    background-color: rgba(59, 130, 246, 0.12);
+    border: 1.5px solid rgba(59, 130, 246, 0.35);
+    color: #60A5FA;
+    font-weight: 700;
+    font-size: 11px;
+    padding: 5px 12px;
+    border-radius: 14px;
+}
+
+/* Theme Toggle Button */
+QPushButton#themeToggleBtn[theme="dark"] {
+    background-color: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 15px;
+    color: #A0AEC0;
+    font-size: 15px;
+    min-width: 40px;
+    min-height: 30px;
+    max-height: 30px;
+}
+QPushButton#themeToggleBtn[theme="dark"]:hover {
+    background-color: rgba(59, 130, 246, 0.1);
+    border-color: #3b82f6;
+    color: #F3C94A;
+}
+
+/* Tab Widget - Flat Frame & Borderless Tabs */
+QTabWidget[theme="dark"]::pane {
+    border: 1px solid #23273a;
+    background-color: #131620;
+    border-radius: 12px;
+    top: -1px;
+}
+
+/* Segmented Control / Pill Style Tab Bar */
+QTabBar[theme="dark"] {
+    background: transparent;
+}
+
+QTabBar[theme="dark"]::tab {
+    background-color: rgba(255, 255, 255, 0.03);
+    color: #9CA3AF;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 17px;
+    padding: 6px 20px;
+    margin-right: 8px;
+    margin-top: 4px;
+    margin-bottom: 6px;
+    font-weight: 600;
+    min-width: 180px;
+}
+QTabBar[theme="dark"]::tab:hover {
+    background-color: rgba(255, 255, 255, 0.07);
+    color: #E2E5EE;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+QTabBar[theme="dark"]::tab:selected {
+    background-color: #2563EB;
+    color: #FFFFFF;
+    border: 1px solid #3B82F6;
+    font-weight: 700;
+}
+
+/* Tablolar */
+QTableWidget[theme="dark"] {
+    background-color: #131620;
+    border: none;
+    gridline-color: #1A1E2D;
+    selection-background-color: #1E2538;
+    selection-color: #FFFFFF;
+}
+
+QTableWidget[theme="dark"]::item {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #1A1E2D;
+    color: #E2E5EE;
+}
+QTableWidget[theme="dark"]::item:selected {
+    background-color: #1E2538;
+    color: #FFFFFF;
+}
+
+QHeaderView[theme="dark"]::section {
+    background-color: #0D0F16;
+    color: #8A94A6;
+    padding: 8px 10px;
+    border: none;
+    border-bottom: 2px solid #2563EB;
+    font-weight: 700;
+    font-size: 12px;
+}
+
+/* Scrollbar */
+QScrollBar[theme="dark"]:vertical {
+    border: none;
+    background: #0D0F16;
+    width: 8px;
+    margin: 0px;
+}
+QScrollBar[theme="dark"]::handle:vertical {
+    background: #23273a;
+    min-height: 20px;
+    border-radius: 4px;
+}
+QScrollBar[theme="dark"]::handle:vertical:hover {
+    background: #2563EB;
+}
+QScrollBar[theme="dark"]::add-line:vertical,
+QScrollBar[theme="dark"]::sub-line:vertical {
+    height: 0px;
+}
+
+/* Butonlar */
+QPushButton#installBtn[theme="dark"] {
+    background-color: #059669;
+    color: #FFFFFF;
+    border: 1px solid transparent;
+    border-radius: 14px;
+    font-weight: 700;
+    margin: 0px;
+    padding: 4px 10px;
+    min-height: 28px;
+    max-height: 28px;
+}
+QPushButton#installBtn[theme="dark"]:hover {
+    background-color: #10B981;
+}
+QPushButton#installBtn[theme="dark"]:pressed {
+    background-color: #047857;
+}
+
+QPushButton#removeBtn[theme="dark"] {
+    background-color: #e63946;
+    color: #FFFFFF;
+    border: 1px solid transparent;
+    border-radius: 14px;
+    font-weight: 700;
+    margin: 0px;
+    padding: 4px 10px;
+    min-height: 28px;
+    max-height: 28px;
+}
+QPushButton#removeBtn[theme="dark"]:hover {
+    background-color: #ff4d5a;
+}
+QPushButton#removeBtn[theme="dark"]:pressed {
+    background-color: #c92a35;
+}
+
+QPushButton#actionBtnDisabled[theme="dark"],
+QPushButton:disabled[theme="dark"] {
+    background-color: #2D3142;
+    color: #6B7280;
+    border: 1px solid transparent;
+    border-radius: 14px;
+    font-weight: 700;
+    margin: 0px;
+    padding: 4px 10px;
+    min-height: 28px;
+    max-height: 28px;
+}
+
+/* Şifre Simülasyon Arayüzü */
+QDialog[theme="dark"] {
+    background-color: #131620;
+    border: 1px solid #23273a;
+    border-radius: 16px;
+}
+
+QLabel#dialogTitle[theme="dark"] {
+    font-size: 16px;
+    font-weight: 700;
+    color: #FFFFFF;
+}
+
+QLineEdit[theme="dark"] {
+    background-color: #0D0F16;
+    border: 1px solid #23273a;
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: #FFFFFF;
+    selection-background-color: #2563EB;
+}
+QLineEdit[theme="dark"]:focus {
+    border-color: #2563EB;
+}
+
+QPushButton#dialogOkBtn[theme="dark"] {
+    background-color: #2563EB;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    padding: 8px 16px;
+}
+QPushButton#dialogOkBtn[theme="dark"]:hover {
+    background-color: #3B82F6;
+}
+
+QPushButton#dialogCancelBtn[theme="dark"] {
+    background-color: #1E2130;
+    color: #9CA3AF;
+    border: 1px solid #23273a;
+    border-radius: 8px;
+    font-weight: 700;
+    padding: 8px 16px;
+}
+QPushButton#dialogCancelBtn[theme="dark"]:hover {
+    background-color: #2D314A;
+    color: #FFFFFF;
+}
+
+
+/* ================================================================
+   AYDINLIK TEMA (theme="light")
+   ================================================================ */
+
+QMainWindow[theme="light"],
+QWidget[theme="light"] {
+    background-color: #F3F4F6;
+    color: #1F2937;
+    font-family: "Inter", "Noto Sans", "Segoe UI", sans-serif;
+    font-size: 13px;
+}
+
+QWidget#centralWidget[theme="light"] {
+    background-color: #F3F4F6;
+}
+
+QWidget#buttonContainer[theme="light"] {
+    background-color: transparent;
+    background: transparent;
+    border: none;
+}
+
+/* Banner / Header */
+QFrame#bannerFrame[theme="light"] {
+    background-color: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 12px;
+}
+
+QLabel#bannerTitle[theme="light"] {
+    font-size: 19px;
+    font-weight: 800;
+    color: #111827;
+    background: transparent;
+}
+
+QLabel#bannerSubtitle[theme="light"] {
+    font-size: 12px;
+    color: #4B5563;
+    background: transparent;
+}
+
+/* Glowing Badge Light */
+QLabel#currentKernelBadge[theme="light"] {
+    background-color: rgba(37, 99, 235, 0.08);
+    border: 1.5px solid rgba(37, 99, 235, 0.3);
+    color: #2563EB;
+    font-weight: 700;
+    font-size: 11px;
+    padding: 5px 12px;
+    border-radius: 14px;
+}
+
+/* Theme Toggle Button */
+QPushButton#themeToggleBtn[theme="light"] {
+    background-color: rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 15px;
+    color: #4B5563;
+    font-size: 15px;
+    min-width: 40px;
+    min-height: 30px;
+    max-height: 30px;
+}
+QPushButton#themeToggleBtn[theme="light"]:hover {
+    background-color: rgba(37, 99, 235, 0.08);
+    border-color: #3b82f6;
+    color: #3b82f6;
+}
+
+/* Tab Widget */
+QTabWidget[theme="light"]::pane {
+    border: 1px solid #E5E7EB;
+    background-color: #FFFFFF;
+    border-radius: 12px;
+    top: -1px;
+}
+
+/* Segmented Control / Pill Style Tab Bar */
+QTabBar[theme="light"] {
+    background: transparent;
+}
+
+QTabBar[theme="light"]::tab {
+    background-color: rgba(0, 0, 0, 0.03);
+    color: #4B5563;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    border-radius: 17px;
+    padding: 6px 20px;
+    margin-right: 8px;
+    margin-top: 4px;
+    margin-bottom: 6px;
+    font-weight: 600;
+    min-width: 180px;
+}
+QTabBar[theme="light"]::tab:hover {
+    background-color: rgba(0, 0, 0, 0.06);
+    color: #1F2937;
+    border-color: rgba(0, 0, 0, 0.1);
+}
+QTabBar[theme="light"]::tab:selected {
+    background-color: #2563EB;
+    color: #FFFFFF;
+    border: 1px solid #3B82F6;
+    font-weight: 700;
+}
+
+/* Tablolar */
+QTableWidget[theme="light"] {
+    background-color: #FFFFFF;
+    border: none;
+    gridline-color: #F3F4F6;
+    selection-background-color: #EDF2F7;
+    selection-color: #1F2937;
+}
+
+QTableWidget[theme="light"]::item {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #F3F4F6;
+    color: #1F2937;
+}
+QTableWidget[theme="light"]::item:selected {
+    background-color: #EDF2F7;
+    color: #1F2937;
+}
+
+QHeaderView[theme="light"]::section {
+    background-color: #F8FAFC;
+    color: #4B5563;
+    padding: 8px 10px;
+    border: none;
+    border-bottom: 2px solid #2563EB;
+    font-weight: 700;
+    font-size: 12px;
+}
+
+/* Scrollbar */
+QScrollBar[theme="light"]:vertical {
+    border: none;
+    background: #F3F4F6;
+    width: 8px;
+    margin: 0px;
+}
+QScrollBar[theme="light"]::handle:vertical {
+    background: #D1D5DB;
+    min-height: 20px;
+    border-radius: 4px;
+}
+QScrollBar[theme="light"]::handle:vertical:hover {
+    background: #2563EB;
+}
+QScrollBar[theme="light"]::add-line:vertical,
+QScrollBar[theme="light"]::sub-line:vertical {
+    height: 0px;
+}
+
+/* Butonlar */
+QPushButton#installBtn[theme="light"] {
+    background-color: #059669;
+    color: #FFFFFF;
+    border: 1px solid transparent;
+    border-radius: 14px;
+    font-weight: 700;
+    margin: 0px;
+    padding: 4px 10px;
+    min-height: 28px;
+    max-height: 28px;
+}
+QPushButton#installBtn[theme="light"]:hover {
+    background-color: #10B981;
+}
+QPushButton#installBtn[theme="light"]:pressed {
+    background-color: #047857;
+}
+
+QPushButton#removeBtn[theme="light"] {
+    background-color: #e63946;
+    color: #FFFFFF;
+    border: 1px solid transparent;
+    border-radius: 14px;
+    font-weight: 700;
+    margin: 0px;
+    padding: 4px 10px;
+    min-height: 28px;
+    max-height: 28px;
+}
+QPushButton#removeBtn[theme="light"]:hover {
+    background-color: #ff4d5a;
+}
+QPushButton#removeBtn[theme="light"]:pressed {
+    background-color: #c92a35;
+}
+
+QPushButton#actionBtnDisabled[theme="light"],
+QPushButton:disabled[theme="light"] {
+    background-color: #E5E7EB;
+    color: #9CA3AF;
+    border: 1px solid transparent;
+    border-radius: 14px;
+    font-weight: 700;
+    margin: 0px;
+    padding: 4px 10px;
+    min-height: 28px;
+    max-height: 28px;
+}
+
+/* Şifre Simülasyon Arayüzü */
+QDialog[theme="light"] {
+    background-color: #FFFFFF;
+    border: 1px solid #E5E7EB;
+    border-radius: 16px;
+}
+
+QLabel#dialogTitle[theme="light"] {
+    font-size: 16px;
+    font-weight: 700;
+    color: #111827;
+}
+
+QLineEdit[theme="light"] {
+    background-color: #F9FAFB;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: #111827;
+    selection-background-color: #2563EB;
+}
+QLineEdit[theme="light"]:focus {
+    border-color: #2563EB;
+}
+
+QPushButton#dialogOkBtn[theme="light"] {
+    background-color: #2563EB;
+    color: #FFFFFF;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    padding: 8px 16px;
+}
+QPushButton#dialogOkBtn[theme="light"]:hover {
+    background-color: #3B82F6;
+}
+
+QPushButton#dialogCancelBtn[theme="light"] {
+    background-color: #E5E7EB;
+    color: #4B5563;
+    border: 1px solid #E5E7EB;
+    border-radius: 8px;
+    font-weight: 700;
+    padding: 8px 16px;
+}
+QPushButton#dialogCancelBtn[theme="light"]:hover {
+    background-color: #D1D5DB;
+    color: #111827;
+}

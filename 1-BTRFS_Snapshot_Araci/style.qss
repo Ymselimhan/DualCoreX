@@ -1,0 +1,533 @@
+/* =====================================================
+   PARDUS BTRFS SNAPSHOT MANAGER — QSS STYLE SHEET
+   v3.0 — Selector sıra düzeltmeleri (property > :: > :)
+   QSS Kuralı: Widget[prop]::subcontrol:pseudostate
+   ===================================================== */
+
+/* ================================================================
+   KOYU TEMA
+   ================================================================ */
+
+QMainWindow[theme="dark"],
+QWidget[theme="dark"] {
+    background-color: #0F1117;
+    color: #E2E5EE;
+    font-family: "Inter", "Noto Sans", "Segoe UI", sans-serif;
+    font-size: 13px;
+}
+
+QWidget#centralWidget[theme="dark"] {
+    background-color: #0F1117;
+}
+
+/* Başlık Çubuğu */
+QFrame#headerFrame[theme="dark"] {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #1A1D27, stop:1 #1E2130);
+    border-bottom: 1px solid #2A2D3E;
+}
+
+QLabel#titleLabel[theme="dark"] {
+    font-size: 18px;
+    font-weight: 700;
+    color: #FFFFFF;
+    background: transparent;
+}
+
+QLabel#subtitleLabel[theme="dark"] {
+    font-size: 11px;
+    color: #6B7280;
+    font-weight: 400;
+    background: transparent;
+}
+
+/* Tema butonu */
+QPushButton#themeToggleBtn[theme="dark"] {
+    background-color: #1A1D27;
+    border: 1px solid #2A2D3E;
+    border-radius: 14px;
+    color: #9CA3AF;
+    font-size: 15px;
+    padding: 4px 8px;
+    min-width: 40px;
+    min-height: 28px;
+    max-height: 28px;
+}
+QPushButton#themeToggleBtn[theme="dark"]:hover {
+    background-color: #23263A;
+    border-color: #4F8EF7;
+    color: #F3C94A;
+}
+
+/* Durum Kartı */
+QFrame#statusFrame[theme="dark"] {
+    background-color: #1A1D27;
+    border: 1px solid #2A2D3E;
+    border-radius: 10px;
+}
+
+QLabel#statusLabel[theme="dark"] {
+    font-size: 13px;
+    font-weight: 600;
+    color: #E2E5EE;
+    background: transparent;
+}
+
+/* Aksiyon Kartı */
+QFrame#actionFrame[theme="dark"] {
+    background-color: #1A1D27;
+    border: 1px solid #2A2D3E;
+    border-radius: 10px;
+}
+
+/* Giriş Kutusu */
+QLineEdit[theme="dark"] {
+    background-color: #0F1117;
+    border: 1.5px solid #2A2D3E;
+    border-radius: 7px;
+    padding: 0px 14px;
+    color: #E2E5EE;
+    font-size: 13px;
+    min-height: 35px;
+    max-height: 35px;
+    selection-background-color: #4F8EF7;
+    selection-color: #FFFFFF;
+}
+QLineEdit[theme="dark"]:focus {
+    border-color: #4F8EF7;
+    background-color: #12151F;
+}
+
+/* Checkbox — Düzeltilmiş: [prop]::indicator:pseudostate */
+QCheckBox[theme="dark"] {
+    color: #9CA3AF;
+    font-size: 12px;
+    spacing: 8px;
+    background: transparent;
+}
+QCheckBox[theme="dark"]:hover {
+    color: #E2E5EE;
+}
+QCheckBox[theme="dark"]::indicator {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    border: 2px solid #3D4263;
+    background-color: #1A1D27;
+}
+QCheckBox[theme="dark"]::indicator:checked {
+    background-color: #4F8EF7;
+    border-color: #4F8EF7;
+}
+QCheckBox[theme="dark"]::indicator:unchecked:hover {
+    border-color: #4F8EF7;
+}
+
+/* Genel Buton */
+QPushButton[theme="dark"] {
+    background-color: #1E2130;
+    border: 1.5px solid #2A2D3E;
+    border-radius: 7px;
+    color: #C9CDD6;
+    padding: 0px 18px;
+    font-weight: 600;
+    font-size: 13px;
+    min-height: 35px;
+    max-height: 35px;
+}
+QPushButton[theme="dark"]:hover {
+    background-color: #252840;
+    border-color: #3D4263;
+    color: #FFFFFF;
+}
+QPushButton[theme="dark"]:pressed {
+    background-color: #1A1D27;
+}
+QPushButton[theme="dark"]:disabled {
+    background-color: #1A1C28;
+    border-color: #22253A;
+    color: #4A4E6A;
+}
+
+/* Yedekle — Mavi */
+QPushButton#backupButton[theme="dark"] {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #5B97F8, stop:1 #3E78E8);
+    border: none;
+    color: #FFFFFF;
+    font-weight: 700;
+    min-height: 35px;
+    max-height: 35px;
+}
+QPushButton#backupButton[theme="dark"]:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #6BA3F9, stop:1 #4A82EE);
+}
+QPushButton#backupButton[theme="dark"]:pressed {
+    background: #2E65D4;
+}
+QPushButton#backupButton[theme="dark"]:disabled {
+    background: #1A2240;
+    color: #3A5090;
+}
+
+/* Geri Yükle — Kırmızı */
+QPushButton#restoreButton[theme="dark"] {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #EF5350, stop:1 #C62828);
+    border: none;
+    color: #FFFFFF;
+    font-weight: 700;
+    min-height: 35px;
+    max-height: 35px;
+}
+QPushButton#restoreButton[theme="dark"]:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #F26360, stop:1 #D32F2F);
+}
+QPushButton#restoreButton[theme="dark"]:pressed {
+    background: #B71C1C;
+}
+QPushButton#restoreButton[theme="dark"]:disabled {
+    background-color: #2A1515;
+    border: 1.5px solid #3A1A1A;
+    color: #6B3535;
+}
+
+/* Sil */
+QPushButton#deleteButton[theme="dark"] {
+    background-color: #1E2130;
+    border: 1.5px solid #3D2828;
+}
+QPushButton#deleteButton[theme="dark"]:hover {
+    background-color: #C62828;
+    border-color: #C62828;
+    color: #FFFFFF;
+}
+QPushButton#deleteButton[theme="dark"]:disabled {
+    background-color: #1A1C28;
+    border-color: #22253A;
+    color: #4A3535;
+}
+
+/* Tablo */
+QTableWidget[theme="dark"] {
+    background-color: #1A1D27;
+    border: 1px solid #2A2D3E;
+    border-radius: 10px;
+    gridline-color: #22253A;
+    selection-background-color: #2C3560;
+    selection-color: #FFFFFF;
+    alternate-background-color: #1E2133;
+}
+QTableWidget[theme="dark"]::item {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #22253A;
+    color: #C9CDD6;
+}
+QTableWidget[theme="dark"]::item:selected {
+    background-color: #2C3560;
+    color: #FFFFFF;
+}
+QTableWidget[theme="dark"]::item:hover {
+    background-color: #232645;
+}
+
+/* DÜZELTME: QHeaderView[prop]::section — doğru sıra */
+QHeaderView[theme="dark"]::section {
+    background-color: #141720;
+    color: #A0A8C0;
+    padding: 10px 14px;
+    border: none;
+    border-bottom: 2px solid #4F8EF7;
+    font-weight: 700;
+    font-size: 11px;
+}
+
+/* DÜZELTME: QScrollBar[prop]:vertical — doğru sıra */
+QScrollBar[theme="dark"]:vertical {
+    border: none;
+    background: #0F1117;
+    width: 6px;
+    border-radius: 3px;
+}
+QScrollBar[theme="dark"]::handle:vertical {
+    background: #2A2D3E;
+    border-radius: 3px;
+    min-height: 30px;
+}
+QScrollBar[theme="dark"]::handle:vertical:hover {
+    background: #4F8EF7;
+}
+QScrollBar[theme="dark"]::add-line:vertical,
+QScrollBar[theme="dark"]::sub-line:vertical {
+    height: 0px;
+}
+
+/* Durum Çubuğu */
+QStatusBar[theme="dark"] {
+    background-color: #0F1117;
+    color: #6B7280;
+    border-top: 1px solid #1E2130;
+    font-size: 12px;
+}
+
+
+/* ================================================================
+   AYDINLIK TEMA
+   ================================================================ */
+
+QMainWindow[theme="light"],
+QWidget[theme="light"] {
+    background-color: #F5F6FA;
+    color: #1A1D27;
+    font-family: "Inter", "Noto Sans", "Segoe UI", sans-serif;
+    font-size: 13px;
+}
+
+QWidget#centralWidget[theme="light"] {
+    background-color: #F5F6FA;
+}
+
+QFrame#headerFrame[theme="light"] {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #FFFFFF, stop:1 #F0F2FF);
+    border-bottom: 1px solid #E2E5EE;
+}
+
+QLabel#titleLabel[theme="light"] {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111827;
+    background: transparent;
+}
+
+QLabel#subtitleLabel[theme="light"] {
+    font-size: 11px;
+    color: #9CA3AF;
+    font-weight: 400;
+    background: transparent;
+}
+
+QPushButton#themeToggleBtn[theme="light"] {
+    background-color: #F0F2FF;
+    border: 1px solid #E2E5EE;
+    border-radius: 14px;
+    color: #6B7280;
+    font-size: 15px;
+    padding: 4px 8px;
+    min-width: 40px;
+    min-height: 28px;
+    max-height: 28px;
+}
+QPushButton#themeToggleBtn[theme="light"]:hover {
+    background-color: #E5E8FF;
+    border-color: #4F8EF7;
+    color: #4F8EF7;
+}
+
+QFrame#statusFrame[theme="light"] {
+    background-color: #FFFFFF;
+    border: 1px solid #E2E5EE;
+    border-radius: 10px;
+}
+
+QLabel#statusLabel[theme="light"] {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1A1D27;
+    background: transparent;
+}
+
+QFrame#actionFrame[theme="light"] {
+    background-color: #FFFFFF;
+    border: 1px solid #E2E5EE;
+    border-radius: 10px;
+}
+
+QLineEdit[theme="light"] {
+    background-color: #F9FAFB;
+    border: 1.5px solid #E2E5EE;
+    border-radius: 7px;
+    padding: 0px 14px;
+    color: #1A1D27;
+    font-size: 13px;
+    min-height: 35px;
+    max-height: 35px;
+    selection-background-color: #4F8EF7;
+    selection-color: #FFFFFF;
+}
+QLineEdit[theme="light"]:focus {
+    border-color: #4F8EF7;
+    background-color: #FFFFFF;
+}
+
+/* Checkbox — Düzeltilmiş sıra */
+QCheckBox[theme="light"] {
+    color: #6B7280;
+    font-size: 12px;
+    spacing: 8px;
+    background: transparent;
+}
+QCheckBox[theme="light"]:hover {
+    color: #1A1D27;
+}
+QCheckBox[theme="light"]::indicator {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    border: 2px solid #D1D5DB;
+    background-color: #FFFFFF;
+}
+QCheckBox[theme="light"]::indicator:checked {
+    background-color: #4F8EF7;
+    border-color: #4F8EF7;
+}
+QCheckBox[theme="light"]::indicator:unchecked:hover {
+    border-color: #4F8EF7;
+}
+
+/* Genel Buton */
+QPushButton[theme="light"] {
+    background-color: #FFFFFF;
+    border: 1.5px solid #E2E5EE;
+    border-radius: 7px;
+    color: #374151;
+    padding: 0px 18px;
+    font-weight: 600;
+    font-size: 13px;
+    min-height: 35px;
+    max-height: 35px;
+}
+QPushButton[theme="light"]:hover {
+    background-color: #F0F2FF;
+    border-color: #4F8EF7;
+    color: #1A1D27;
+}
+QPushButton[theme="light"]:pressed {
+    background-color: #E5E8FF;
+}
+QPushButton[theme="light"]:disabled {
+    background-color: #F3F4F6;
+    border-color: #E5E7EB;
+    color: #B0B4BC;
+}
+
+QPushButton#backupButton[theme="light"] {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #5B97F8, stop:1 #3E78E8);
+    border: none;
+    color: #FFFFFF;
+    font-weight: 700;
+    min-height: 35px;
+    max-height: 35px;
+}
+QPushButton#backupButton[theme="light"]:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #6BA3F9, stop:1 #4A82EE);
+}
+QPushButton#backupButton[theme="light"]:pressed {
+    background: #2E65D4;
+}
+QPushButton#backupButton[theme="light"]:disabled {
+    background: #DDEAFF;
+    color: #9AB8E8;
+}
+
+QPushButton#restoreButton[theme="light"] {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #EF5350, stop:1 #C62828);
+    border: none;
+    color: #FFFFFF;
+    font-weight: 700;
+    min-height: 35px;
+    max-height: 35px;
+}
+QPushButton#restoreButton[theme="light"]:hover {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1, stop:0 #F26360, stop:1 #D32F2F);
+}
+QPushButton#restoreButton[theme="light"]:pressed {
+    background: #B71C1C;
+}
+QPushButton#restoreButton[theme="light"]:disabled {
+    background: #FDECEA;
+    border: 1.5px solid #FCCFCF;
+    color: #C8A0A0;
+}
+
+QPushButton#deleteButton[theme="light"] {
+    background-color: #FFF5F5;
+    border: 1.5px solid #FCCFCF;
+    color: #C62828;
+    font-weight: 600;
+    min-height: 35px;
+    max-height: 35px;
+}
+QPushButton#deleteButton[theme="light"]:hover {
+    background-color: #C62828;
+    border-color: #C62828;
+    color: #FFFFFF;
+}
+QPushButton#deleteButton[theme="light"]:disabled {
+    background-color: #F9FAFB;
+    border-color: #F3F4F6;
+    color: #E2A0A0;
+}
+
+/* Tablo */
+QTableWidget[theme="light"] {
+    background-color: #FFFFFF;
+    border: 1px solid #E2E5EE;
+    border-radius: 10px;
+    gridline-color: #F3F4F6;
+    selection-background-color: #EEF3FF;
+    selection-color: #1A1D27;
+    alternate-background-color: #F9FAFB;
+}
+QTableWidget[theme="light"]::item {
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #F3F4F6;
+    color: #374151;
+}
+QTableWidget[theme="light"]::item:selected {
+    background-color: #EEF3FF;
+    color: #1A1D27;
+}
+QTableWidget[theme="light"]::item:hover {
+    background-color: #F3F6FF;
+}
+
+/* DÜZELTME: QHeaderView[prop]::section — doğru sıra */
+QHeaderView[theme="light"]::section {
+    background-color: #F1F3F9;
+    color: #374151;
+    padding: 10px 14px;
+    border: none;
+    border-bottom: 2px solid #4F8EF7;
+    font-weight: 700;
+    font-size: 11px;
+}
+
+/* DÜZELTME: QScrollBar[prop]:vertical — doğru sıra */
+QScrollBar[theme="light"]:vertical {
+    border: none;
+    background: #F5F6FA;
+    width: 6px;
+    border-radius: 3px;
+}
+QScrollBar[theme="light"]::handle:vertical {
+    background: #D1D5DB;
+    border-radius: 3px;
+    min-height: 30px;
+}
+QScrollBar[theme="light"]::handle:vertical:hover {
+    background: #4F8EF7;
+}
+QScrollBar[theme="light"]::add-line:vertical,
+QScrollBar[theme="light"]::sub-line:vertical {
+    height: 0px;
+}
+
+QStatusBar[theme="light"] {
+    background-color: #FFFFFF;
+    color: #9CA3AF;
+    border-top: 1px solid #E2E5EE;
+    font-size: 12px;
+}
