@@ -408,7 +408,7 @@ QTabWidget::pane {
 QTabBar::tab {
     background-color: #1c1e2a;
     color: #a9b1d6;
-    padding: 8px 20px;
+    padding: 8px 35px;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
     margin-right: 4px;
@@ -793,7 +793,7 @@ QTabWidget::pane {
 QTabBar::tab {
     background-color: #dce0e8;
     color: #5c5f77;
-    padding: 8px 20px;
+    padding: 8px 35px;
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
     margin-right: 4px;
@@ -1152,11 +1152,12 @@ class ProgressDialog(QDialog):
 
 class PackageInstallerWindow(QDialog):
     """CachyOS Package Installer arayüzünü birebir simüle eden popüler paket yükleyici."""
-    def __init__(self, parent=None, is_dark_mode=True):
+    def __init__(self, parent=None, is_dark_mode=True, lang_idx=0):
         super().__init__(parent)
         self.setWindowFlags(Qt.Dialog | Qt.FramelessWindowHint)
         self.setMinimumSize(850, 580)
         self.is_dark_mode = is_dark_mode
+        self.lang_idx = lang_idx
         self.parent_window = parent
 
         # Yüklü uygulamaları simüle etmek için veri yapısı
@@ -1166,12 +1167,14 @@ class PackageInstallerWindow(QDialog):
         self.init_ui()
 
     def init_ui(self):
+        is_tr = (self.lang_idx == 0)
         main_layout = QVBoxLayout(self)
         main_layout.setContentsMargins(0, 0, 0, 0)
         main_layout.setSpacing(0)
 
         # Başlık Çubuğu
-        self.title_bar = CustomTitleBar(self, title="Pardus Paket Kurucu", subtitle="Pardus Package Installer")
+        title_text = "Pardus Paket Kurucu" if is_tr else "Pardus Package Installer"
+        self.title_bar = CustomTitleBar(self, title=title_text, subtitle=title_text)
         main_layout.addWidget(self.title_bar)
 
         # Ana İçerik Alanı
@@ -1197,9 +1200,12 @@ class PackageInstallerWindow(QDialog):
         title_lbl_layout.setContentsMargins(0, 0, 0, 0)
         title_lbl_layout.setSpacing(2)
         
-        main_lbl = QLabel("Popüler Paketleri Yönetin")
+        main_lbl_text = "Popüler Paketleri Yönetin" if is_tr else "Manage Popular Packages"
+        sub_lbl_text = "Devre dışı bırakılan öğeler sisteminizde zaten yüklüdür." if is_tr else "Disabled items are already installed on your system."
+        
+        main_lbl = QLabel(main_lbl_text)
         main_lbl.setStyleSheet("font-size: 16px; font-weight: bold; color: #ffffff;" if self.is_dark_mode else "font-size: 16px; font-weight: bold; color: #1e1f29;")
-        sub_lbl = QLabel("Devre dışı bırakılan öğeler sisteminizde zaten yüklüdür.")
+        sub_lbl = QLabel(sub_lbl_text)
         sub_lbl.setStyleSheet("font-size: 11px; color: #a9b1d6;" if self.is_dark_mode else "font-size: 11px; color: #5c5f77;")
         
         title_lbl_layout.addWidget(main_lbl)
@@ -1209,7 +1215,7 @@ class PackageInstallerWindow(QDialog):
 
         # Arama kutusu
         self.search_input = QLineEdit()
-        self.search_input.setPlaceholderText("Arama...")
+        self.search_input.setPlaceholderText("Arama..." if is_tr else "Search...")
         self.search_input.setFixedWidth(200)
         self.search_input.textChanged.connect(self.filter_packages)
         top_bar_layout.addWidget(self.search_input)
@@ -1217,24 +1223,31 @@ class PackageInstallerWindow(QDialog):
 
         # Paket Ağacı (Tree Widget)
         self.tree_widget = QTreeWidget()
-        self.tree_widget.setHeaderLabels(["Paket Adı", "Bilgi / Paket", "Açıklama"])
+        headers = ["Paket Adı", "Bilgi / Paket", "Açıklama"] if is_tr else ["Package Name", "Info / Package", "Description"]
+        self.tree_widget.setHeaderLabels(headers)
         self.tree_widget.setColumnWidth(0, 220)
         self.tree_widget.setColumnWidth(1, 180)
         self.tree_widget.itemSelectionChanged.connect(self.on_item_selected)
         pop_layout.addWidget(self.tree_widget)
 
-        self.tab_widget.addTab(pop_tab, "Popular Applications")
+        self.tab_widget.addTab(pop_tab, "Popüler Uygulamalar" if is_tr else "Popular Applications")
 
         # REPO TAB (SIMULATED)
         repo_tab = QWidget()
         repo_layout = QVBoxLayout(repo_tab)
         repo_layout.setContentsMargins(30, 30, 30, 30)
-        repo_desc = QLabel("<b>Pardus Depo Yöneticisi</b><br><br>Bu sekmeden resmi Pardus ana depolarını kontrol edebilir ve katkıda bulunulan 'contrib' veya 'non-free' depolarını açıp kapatabilirsiniz.")
+        
+        repo_desc_text = (
+            "<b>Pardus Depo Yöneticisi</b><br><br>Bu sekmeden resmi Pardus ana depolarını kontrol edebilir ve katkıda bulunulan 'contrib' veya 'non-free' depolarını açıp kapatabilirsiniz."
+            if is_tr else
+            "<b>Pardus Repository Manager</b><br><br>From this tab, you can manage official Pardus repositories and enable/disable 'contrib' or 'non-free' software sources."
+        )
+        repo_desc = QLabel(repo_desc_text)
         repo_desc.setFont(QFont("Inter", 11))
         repo_desc.setWordWrap(True)
         repo_layout.addWidget(repo_desc)
         repo_layout.addStretch()
-        self.tab_widget.addTab(repo_tab, "Repo")
+        self.tab_widget.addTab(repo_tab, "Depo" if is_tr else "Repo")
 
         # CONSOLE OUTPUT TAB (SIMULATED)
         console_tab = QWidget()
@@ -1242,36 +1255,42 @@ class PackageInstallerWindow(QDialog):
         console_layout.setContentsMargins(15, 15, 15, 15)
         self.console_view = QLineEdit()
         self.console_view.setReadOnly(True)
-        self.console_view.setText("Pardus Paket Kurucu PoC Başlatıldı.\nPaket depoları yükleniyor...\nHazır.")
+        
+        console_init_text = (
+            "Pardus Paket Kurucu PoC Başlatıldı.\nPaket depoları yükleniyor...\nHazır."
+            if is_tr else
+            "Pardus Package Installer PoC Started.\nLoading package repositories...\nReady."
+        )
+        self.console_view.setText(console_init_text)
         console_layout.addWidget(self.console_view)
-        self.tab_widget.addTab(console_tab, "Console Output")
+        self.tab_widget.addTab(console_tab, "Konsol Çıktısı" if is_tr else "Console Output")
 
         content_layout.addWidget(self.tab_widget)
 
         # Alt Eylem Düğmeleri
         btn_layout = QHBoxLayout()
         
-        self.about_btn = QPushButton("Hakkında...")
+        self.about_btn = QPushButton("Hakkında..." if is_tr else "About...")
         self.about_btn.clicked.connect(self.show_about)
         
-        self.help_btn = QPushButton("Yardım")
+        self.help_btn = QPushButton("Yardım" if is_tr else "Help")
         self.help_btn.clicked.connect(self.show_help)
 
         btn_layout.addWidget(self.about_btn)
         btn_layout.addWidget(self.help_btn)
         btn_layout.addStretch()
 
-        self.uninstall_btn = QPushButton("Kaldır")
+        self.uninstall_btn = QPushButton("Kaldır" if is_tr else "Uninstall")
         self.uninstall_btn.setObjectName("dangerActionBtn")
         self.uninstall_btn.setEnabled(False)
         self.uninstall_btn.clicked.connect(self.simulate_uninstall)
 
-        self.install_btn = QPushButton("Kur")
+        self.install_btn = QPushButton("Kur" if is_tr else "Install")
         self.install_btn.setObjectName("primaryActionBtn")
         self.install_btn.setEnabled(False)
         self.install_btn.clicked.connect(self.simulate_install)
 
-        self.close_btn = QPushButton("Kapat")
+        self.close_btn = QPushButton("Kapat" if is_tr else "Close")
         self.close_btn.clicked.connect(self.reject)
 
         btn_layout.addWidget(self.uninstall_btn)
@@ -1285,47 +1304,90 @@ class PackageInstallerWindow(QDialog):
         self.load_packages()
 
     def load_packages(self):
+        is_tr = (self.lang_idx == 0)
         # Kategori Paket Verileri
-        self.package_data = {
-            "Ses & Müzik (Audio)": [
-                {"name": "Audacity", "pkg": "audacity", "desc": "Açık kaynaklı ses düzenleme programı."},
-                {"name": "PulseEffects", "pkg": "pulseeffects", "desc": "Gelişmiş ses dengeleme ve efekt aracı."}
-            ],
-            "Tarayıcılar (Browsers)": [
-                {"name": "Google Chrome", "pkg": "google-chrome-stable", "desc": "Hızlı, güvenli ve en popüler ağ tarayıcısı."},
-                {"name": "Mozilla Firefox", "pkg": "firefox-esr", "desc": "Gizlilik odaklı, kararlı ve açık kaynaklı web tarayıcı."},
-                {"name": "Brave Browser", "pkg": "brave-browser", "desc": "Reklamları engelleyen, hızlı ve gizlilik merkezli tarayıcı."},
-                {"name": "Vivaldi", "pkg": "vivaldi-stable", "desc": "Kişiselleştirilebilir ve gelişmiş sekme özellikli tarayıcı."}
-            ],
-            "İletişim (Communication)": [
-                {"name": "Discord", "pkg": "discord", "desc": "Sesli, yazılı ve görüntülü popüler sohbet platformu."},
-                {"name": "Telegram Desktop", "pkg": "telegram-desktop", "desc": "Güvenli ve hızlı mesajlaşma istemcisi."}
-            ],
-            "Geliştirici Araçları (Development)": [
-                {"name": "Visual Studio Code", "pkg": "code", "desc": "Modern diller için en yaygın kod düzenleme platformu."},
-                {"name": "PyCharm Community", "pkg": "pycharm-community", "desc": "Python geliştiricileri için akıllı IDE aracı."},
-                {"name": "GitKraken", "pkg": "gitkraken", "desc": "Git yönetimini kolaylaştıran şık ve görsel arayüz."},
-                {"name": "Docker Engine", "pkg": "docker-ce", "desc": "Konteyner tabanlı sanallaştırma teknolojisi."}
-            ],
-            "Oyunlar (Games)": [
-                {"name": "Steam Client", "pkg": "steam", "desc": "En geniş dijital oyun mağazası ve çalıştırma platformu."},
-                {"name": "Lutris", "pkg": "lutris", "desc": "Tüm oyun kütüphanelerinizi birleştiren başlatıcı."}
-            ],
-            "Grafik Tasarım (Graphics)": [
-                {"name": "GIMP", "pkg": "gimp", "desc": "Photoshop alternatifi güçlü açık kaynaklı resim düzenleyici."},
-                {"name": "Inkscape", "pkg": "inkscape", "desc": "Vektörel grafik ve çizim tasarım aracı."},
-                {"name": "Blender", "pkg": "blender", "desc": "Profesyonel 3 boyutlu modelleme ve animasyon programı."}
-            ],
-            "Ofis Paketleri (Office)": [
-                {"name": "LibreOffice", "pkg": "libreoffice", "desc": "Tam donanımlı, popüler açık kaynaklı ofis paketi."},
-                {"name": "OnlyOffice Editors", "pkg": "onlyoffice-desktopeditors", "desc": "MS Office formatları ile yüksek uyumluluğa sahip ofis düzenleyici."}
-            ],
-            "Multimedya (Multimedia)": [
-                {"name": "VLC Media Player", "pkg": "vlc", "desc": "Neredeyse tüm formatları oynatan açık kaynaklı medya oynatıcı."},
-                {"name": "Spotify Client", "pkg": "spotify-client", "desc": "Müzik, podcast ve çalma listesi akış servisi."},
-                {"name": "OBS Studio", "pkg": "obs-studio", "desc": "Profesyonel ekran videosu kaydetme ve yayınlama yazılımı."}
-            ]
-        }
+        if is_tr:
+            self.package_data = {
+                "Ses & Müzik (Audio)": [
+                    {"name": "Audacity", "pkg": "audacity", "desc": "Açık kaynaklı ses düzenleme programı."},
+                    {"name": "PulseEffects", "pkg": "pulseeffects", "desc": "Gelişmiş ses dengeleme ve efekt aracı."}
+                ],
+                "Tarayıcılar (Browsers)": [
+                    {"name": "Google Chrome", "pkg": "google-chrome-stable", "desc": "Hızlı, güvenli ve en popüler ağ tarayıcısı."},
+                    {"name": "Mozilla Firefox", "pkg": "firefox-esr", "desc": "Gizlilik odaklı, kararlı ve açık kaynaklı web tarayıcı."},
+                    {"name": "Brave Browser", "pkg": "brave-browser", "desc": "Reklamları engelleyen, hızlı ve gizlilik merkezli tarayıcı."},
+                    {"name": "Vivaldi", "pkg": "vivaldi-stable", "desc": "Kişiselleştirilebilir ve gelişmiş sekme özellikli tarayıcı."}
+                ],
+                "İletişim (Communication)": [
+                    {"name": "Discord", "pkg": "discord", "desc": "Sesli, yazılı ve görüntülü popüler sohbet platformu."},
+                    {"name": "Telegram Desktop", "pkg": "telegram-desktop", "desc": "Güvenli ve hızlı mesajlaşma istemcisi."}
+                ],
+                "Geliştirici Araçları (Development)": [
+                    {"name": "Visual Studio Code", "pkg": "code", "desc": "Modern diller için en yaygın kod düzenleme platformu."},
+                    {"name": "PyCharm Community", "pkg": "pycharm-community", "desc": "Python geliştiricileri için akıllı IDE aracı."},
+                    {"name": "GitKraken", "pkg": "gitkraken", "desc": "Git yönetimini kolaylaştıran şık ve görsel arayüz."},
+                    {"name": "Docker Engine", "pkg": "docker-ce", "desc": "Konteyner tabanlı sanallaştırma teknolojisi."}
+                ],
+                "Oyunlar (Games)": [
+                    {"name": "Steam Client", "pkg": "steam", "desc": "En geniş dijital oyun mağazası ve çalıştırma platformu."},
+                    {"name": "Lutris", "pkg": "lutris", "desc": "Tüm oyun kütüphanelerinizi birleştiren başlatıcı."}
+                ],
+                "Grafik Tasarım (Graphics)": [
+                    {"name": "GIMP", "pkg": "gimp", "desc": "Photoshop alternatifi güçlü açık kaynaklı resim düzenleyici."},
+                    {"name": "Inkscape", "pkg": "inkscape", "desc": "Vektörel grafik ve çizim tasarım aracı."},
+                    {"name": "Blender", "pkg": "blender", "desc": "Profesyonel 3 boyutlu modelleme ve animasyon programı."}
+                ],
+                "Ofis Paketleri (Office)": [
+                    {"name": "LibreOffice", "pkg": "libreoffice", "desc": "Tam donanımlı, popüler açık kaynaklı ofis paketi."},
+                    {"name": "OnlyOffice Editors", "pkg": "onlyoffice-desktopeditors", "desc": "MS Office formatları ile yüksek uyumluluğa sahip ofis düzenleyici."}
+                ],
+                "Multimedya (Multimedia)": [
+                    {"name": "VLC Media Player", "pkg": "vlc", "desc": "Neredeyse tüm formatları oynatan açık kaynaklı medya oynatıcı."},
+                    {"name": "Spotify Client", "pkg": "spotify-client", "desc": "Müzik, podcast ve çalma listesi akış servisi."},
+                    {"name": "OBS Studio", "pkg": "obs-studio", "desc": "Profesyonel ekran videosu kaydetme ve yayınlama yazılımı."}
+                ]
+            }
+        else:
+            self.package_data = {
+                "Audio (Ses & Müzik)": [
+                    {"name": "Audacity", "pkg": "audacity", "desc": "Open-source audio editing software."},
+                    {"name": "PulseEffects", "pkg": "pulseeffects", "desc": "Advanced audio equalizer and effects tool."}
+                ],
+                "Browsers (Tarayıcılar)": [
+                    {"name": "Google Chrome", "pkg": "google-chrome-stable", "desc": "Fast, secure, and the most popular web browser."},
+                    {"name": "Mozilla Firefox", "pkg": "firefox-esr", "desc": "Privacy-focused, stable, and open-source web browser."},
+                    {"name": "Brave Browser", "pkg": "brave-browser", "desc": "Ad-blocking, fast, and privacy-oriented browser."},
+                    {"name": "Vivaldi", "pkg": "vivaldi-stable", "desc": "Customizable browser with advanced tab features."}
+                ],
+                "Communication (İletişim)": [
+                    {"name": "Discord", "pkg": "discord", "desc": "Popular voice, video, and text chat platform."},
+                    {"name": "Telegram Desktop", "pkg": "telegram-desktop", "desc": "Secure and fast messaging client."}
+                ],
+                "Development Tools (Geliştirici)": [
+                    {"name": "Visual Studio Code", "pkg": "code", "desc": "The most widely used code editing platform for modern languages."},
+                    {"name": "PyCharm Community", "pkg": "pycharm-community", "desc": "Smart IDE tool for Python developers."},
+                    {"name": "GitKraken", "pkg": "gitkraken", "desc": "Sleek and visual interface for easy Git management."},
+                    {"name": "Docker Engine", "pkg": "docker-ce", "desc": "Container-based virtualization technology."}
+                ],
+                "Games (Oyunlar)": [
+                    {"name": "Steam Client", "pkg": "steam", "desc": "The largest digital game store and client."},
+                    {"name": "Lutris", "pkg": "lutris", "desc": "Open source gaming platform that unifies all your game libraries."}
+                ],
+                "Graphics (Grafik Tasarım)": [
+                    {"name": "GIMP", "pkg": "gimp", "desc": "Powerful open-source image editor alternative to Photoshop."},
+                    {"name": "Inkscape", "pkg": "inkscape", "desc": "Vector graphics and illustration design tool."},
+                    {"name": "Blender", "pkg": "blender", "desc": "Professional 3D modeling and animation suite."}
+                ],
+                "Office (Ofis Paketleri)": [
+                    {"name": "LibreOffice", "pkg": "libreoffice", "desc": "Fully featured, popular open-source office suite."},
+                    {"name": "OnlyOffice Editors", "pkg": "onlyoffice-desktopeditors", "desc": "Office editor with high compatibility for MS Office formats."}
+                ],
+                "Multimedia (Çoklu Ortam)": [
+                    {"name": "VLC Media Player", "pkg": "vlc", "desc": "Open-source media player that plays almost all formats."},
+                    {"name": "Spotify Client", "pkg": "spotify-client", "desc": "Music, podcast, and playlist streaming service."},
+                    {"name": "OBS Studio", "pkg": "obs-studio", "desc": "Professional screen recorder and live streaming software."}
+                ]
+            }
 
         self.tree_widget.clear()
         for cat_name, apps in self.package_data.items():
@@ -1441,6 +1503,130 @@ class PackageInstallerWindow(QDialog):
         QMessageBox.information(self, "Yardım", "Listeden kurmak veya kaldırmak istediğiniz programı seçin, ardından alt taraftaki Kur/Kaldır butonlarını kullanın.")
 
 
+TRANSLATIONS = {
+    "tr": {
+        "title_bar_title": "Pardus Hello",
+        "title_bar_subtitle": "Pardus 23.0 - Karşılama Ekranı",
+        "welcome_title": "Pardus'a Hoş Geldiniz!",
+        "welcome_subtitle": "Aramıza katıldığınız için size çok teşekkür ederiz!",
+        "intro_text": "Pardus Geliştirici Ekibi olarak, bizler yapımında ne kadar zevk aldıysak, sizlerin de Pardus'u kullanırken o kadar memnun kalacağınızı umut ediyoruz. Aşağıdaki bağlantılar, yeni işletim sisteminizi kullanma konusunda sizlere yardımcı olacaktır. Bu vesileyle tecrübenizin tadını çıkarın, fikir ve düşüncelerinizi bizlerle paylaşmaktan çekinmeyin.",
+        "col_doc": "DÖKÜMANTASYON",
+        "col_sup": "DESTEK",
+        "col_prj": "PROJE",
+        "link_readme": "Beni oku",
+        "link_release": "Sürüm bilgisi",
+        "link_wiki": "Viki ↗",
+        "link_forum": "Forum ↗",
+        "link_software": "Yazılım ↗",
+        "link_join": "Projeye katıl",
+        "link_dev": "Geliştirme ↗",
+        "link_donate": "Pardus Hakkında ↗",
+        "btn_tweaks": "Uygulamalar/İyileştirmeler",
+        "btn_installer": "Uygulama kur",
+        "btn_trouble": "Troubleshooting",
+        "tweaks_back_btn": "❮ Geri",
+        "tweaks_page_title": "İnce Ayarlar ve Araçlar",
+        "tweaks_section1": "İnce Ayarlar",
+        "tweaks_section2": "Araçlar",
+        "tweaks_section3": "Uygulamalar",
+        "chk_psd": "Profile-sync-daemon etkinleştirildi.",
+        "chk_ananicy": "Ananicy Cpp etkinleştirildi.",
+        "chk_updater": "Pardus Güncelleyici etkinleştirildi.",
+        "chk_oomd": "Systemd-oomd etkinleştirildi.",
+        "chk_bpftune": "Bpftune etkinleştirildi.",
+        "chk_bluetooth": "Bluetooth etkinleştirildi.",
+        "btn_sys_update": "Sistem güncellemesi",
+        "btn_mirrors": "Yansıları hıza göre sırala",
+        "btn_orphans": "Artık (orphan) paketleri kaldır",
+        "btn_vram": "VRAM yönetimini kur",
+        "btn_winboat": "Winboat kur",
+        "btn_games": "Oyun paketlerini kur",
+        "btn_dns": "DNS sunucusunu değiştir",
+        "btn_open_installer": "Pardus Paket Yükleyici",
+        "btn_open_kernel": "Pardus Çekirdek Yöneticisi",
+        "kernel_back_btn": "❮ Geri",
+        "kernel_page_title": "Çekirdek Yöneticisi (Kernel Manager)",
+        "kernel_desc": "Debian/Pardus için optimize edilmiş çekirdek paketlerini kurabilir ve geçiş yapabilirsiniz.\nMevcut sisteminizde çalışan sürüm: <b>{kernel}</b>",
+        "desc_default": "Pardus Standart Kararlı Çekirdek (Önerilen)",
+        "desc_rt": "Düşük Gecikmeli Gerçek Zamanlı Çekirdek (Realtime)",
+        "desc_lts": "Uzun Süreli Desteklenen Çekirdek (Debian Stable)",
+        "desc_liquorix": "Liquorix Yüksek Performanslı Oyun ve Masaüstü Çekirdeği",
+        "running_lbl": "Çalışıyor",
+        "install_lbl": "Kur",
+        "remove_lbl": "Kaldır",
+        "trouble_back_btn": "❮ Geri",
+        "trouble_page_title": "Sorun Giderme (Troubleshooting)",
+        "btn_clear_cache": "Önbellekteki paketleri temizle",
+        "btn_db_lock": "Apt/dpkg veritabanı kilidini kaldır",
+        "btn_keyring": "Anahtar halkalarını sıfırla",
+        "btn_reinstall_all": "Tüm paketleri yeniden kur",
+        "btn_kwin_debug": "Pardus Sistem ve Hata Günlüklerini Göster",
+        "startup_lbl": "Başlangıçta aç:",
+        "tooltip_theme": "Temayı Değiştir"
+    },
+    "en": {
+        "title_bar_title": "Pardus Hello",
+        "title_bar_subtitle": "Pardus 23.0 - Welcome Screen",
+        "welcome_title": "Welcome to Pardus!",
+        "welcome_subtitle": "Thank you very much for joining us!",
+        "intro_text": "As the Pardus Developer Team, we hope you will enjoy using Pardus as much as we enjoyed building it. The links below will help you get started with your new operating system. Enjoy the experience, and please feel free to share your thoughts and ideas with us.",
+        "col_doc": "DOCUMENTATION",
+        "col_sup": "SUPPORT",
+        "col_prj": "PROJECT",
+        "link_readme": "Read me",
+        "link_release": "Release notes",
+        "link_wiki": "Wiki ↗",
+        "link_forum": "Forum ↗",
+        "link_software": "Software ↗",
+        "link_join": "Join project",
+        "link_dev": "Development ↗",
+        "link_donate": "About Pardus ↗",
+        "btn_tweaks": "Apps & Tweaks",
+        "btn_installer": "Install Apps",
+        "btn_trouble": "Troubleshooting",
+        "tweaks_back_btn": "❮ Back",
+        "tweaks_page_title": "Tweaks and Tools",
+        "tweaks_section1": "Tweaks",
+        "tweaks_section2": "Tools",
+        "tweaks_section3": "Applications",
+        "chk_psd": "Profile-sync-daemon enabled.",
+        "chk_ananicy": "Ananicy Cpp enabled.",
+        "chk_updater": "Pardus Updater enabled.",
+        "chk_oomd": "Systemd-oomd enabled.",
+        "chk_bpftune": "Bpftune enabled.",
+        "chk_bluetooth": "Bluetooth enabled.",
+        "btn_sys_update": "System update",
+        "btn_mirrors": "Rank mirrors by speed",
+        "btn_orphans": "Remove orphan packages",
+        "btn_vram": "Setup VRAM management",
+        "btn_winboat": "Install Winboat",
+        "btn_games": "Install gaming packages",
+        "btn_dns": "Change DNS server",
+        "btn_open_installer": "Pardus Package Installer",
+        "btn_open_kernel": "Pardus Kernel Manager",
+        "kernel_back_btn": "❮ Back",
+        "kernel_page_title": "Kernel Manager",
+        "kernel_desc": "You can install and switch to optimized kernel packages for Debian/Pardus.\nCurrently running version on your system: <b>{kernel}</b>",
+        "desc_default": "Pardus Standard Stable Kernel (Recommended)",
+        "desc_rt": "Low Latency Realtime Kernel (Realtime)",
+        "desc_lts": "Long Term Supported Kernel (Debian Stable)",
+        "desc_liquorix": "Liquorix High Performance Gaming and Desktop Kernel",
+        "running_lbl": "Running",
+        "install_lbl": "Install",
+        "remove_lbl": "Remove",
+        "trouble_back_btn": "❮ Back",
+        "trouble_page_title": "Troubleshooting",
+        "btn_clear_cache": "Clear cached packages",
+        "btn_db_lock": "Remove Apt/dpkg database lock",
+        "btn_keyring": "Reset keyring keys",
+        "btn_reinstall_all": "Reinstall all packages",
+        "btn_kwin_debug": "Show Pardus System and Error Logs",
+        "startup_lbl": "Open at startup:",
+        "tooltip_theme": "Change Theme"
+    }
+}
+
+
 # ==============================================================================
 # ANA UYGULAMA PENCERESİ (MainWindow)
 # ==============================================================================
@@ -1472,6 +1658,102 @@ class MainWindow(QMainWindow):
         self.current_theme = "dark" if detect_system_dark_mode() else "light"
         self.apply_theme()
         self.init_ui()
+        
+        # Dil değiştiğinde arayüzü güncelle
+        self.lang_combo.currentIndexChanged.connect(self.change_language)
+        self.retranslate_ui()
+
+    def change_language(self, index):
+        self.retranslate_ui()
+        self.diagnostic_logs.append(f"[INFO] Dil değiştirildi: {'English' if index == 1 else 'Türkçe'}")
+
+    def retranslate_ui(self):
+        lang_idx = self.lang_combo.currentIndex()
+        lang = "tr" if lang_idx == 0 else "en"
+        t = TRANSLATIONS[lang]
+
+        # Başlık Çubuğu
+        self.title_bar.title_lbl.setText(t["title_bar_title"])
+        self.title_bar.subtitle_lbl.setText(t["title_bar_subtitle"])
+
+        # Karşılama Sayfası
+        self.welcome_title.setText(t["welcome_title"])
+        self.welcome_subtitle.setText(t["welcome_subtitle"])
+        self.intro_text.setText(t["intro_text"])
+
+        # Karşılama Kolon Kartları Başlıkları ve Linkler
+        for label, col_key in self.col_title_labels:
+            label.setText(t[col_key])
+        for btn, link_key in self.link_buttons:
+            btn.setText(t[link_key])
+
+        self.btn_tweaks.setText(t["btn_tweaks"])
+        self.btn_installer.setText(t["btn_installer"])
+        self.btn_trouble.setText(t["btn_trouble"])
+
+        # İnce Ayarlar Sayfası
+        self.tweaks_back_btn.setText(t["tweaks_back_btn"])
+        self.tweaks_page_title.setText(t["tweaks_page_title"])
+        self.tweaks_section_title1.setText(t["tweaks_section1"])
+        self.tweaks_section_title2.setText(t["tweaks_section2"])
+        self.tweaks_section_title3.setText(t["tweaks_section3"])
+
+        self.chk1.setText(t["chk_psd"])
+        self.chk2.setText(t["chk_ananicy"])
+        self.chk3.setText(t["chk_updater"])
+        self.chk4.setText(t["chk_oomd"])
+        self.chk5.setText(t["chk_bpftune"])
+        self.chk6.setText(t["chk_bluetooth"])
+
+        self.btn_sys_update.setText(t["btn_sys_update"])
+        self.btn_mirrors.setText(t["btn_mirrors"])
+        self.btn_orphans.setText(t["btn_orphans"])
+        self.btn_vram.setText(t["btn_vram"])
+        self.btn_winboat.setText(t["btn_winboat"])
+        self.btn_games.setText(t["btn_games"])
+        self.btn_dns.setText(t["btn_dns"])
+
+        self.btn_open_installer.setText(t["btn_open_installer"])
+        self.btn_open_kernel.setText(t["btn_open_kernel"])
+
+        # Çekirdek Sayfası
+        self.kernel_back_btn.setText(t["kernel_back_btn"])
+        self.kernel_page_title.setText(t["kernel_page_title"])
+        self.kernel_desc_label.setText(t["kernel_desc"].format(kernel=self.kernel_info))
+
+        for item in self.kernel_widgets:
+            is_currently_running = (item["id"] == "default")
+            active_indicator = " [ AKTİF ]" if lang == "tr" else " [ ACTIVE ]"
+            color_theme = '#00f5d4' if self.current_theme == 'dark' else '#00a896'
+            if is_currently_running:
+                item["k_title"].setText(item["name"] + f" <span style='color: {color_theme}; font-size: 10px; font-weight: bold;'>{active_indicator}</span>")
+            else:
+                item["k_title"].setText(item["name"])
+
+            # Çekirdek açıklaması çevirisi
+            desc_key = "desc_" + item["id"]
+            item["k_desc"].setText(t[desc_key])
+
+            if item["status_lbl"]:
+                item["status_lbl"].setText(t["running_lbl"])
+            if item["install_btn"]:
+                item["install_btn"].setText(t["install_lbl"])
+            if item["remove_btn"]:
+                item["remove_btn"].setText(t["remove_lbl"])
+
+        # Sorun Giderme Sayfası
+        self.trouble_back_btn.setText(t["trouble_back_btn"])
+        self.trouble_page_title.setText(t["trouble_page_title"])
+
+        self.btn_clear_cache.setText(t["btn_clear_cache"])
+        self.btn_db_lock.setText(t["btn_db_lock"])
+        self.btn_keyring.setText(t["btn_keyring"])
+        self.btn_reinstall_all.setText(t["btn_reinstall_all"])
+        self.btn_kwin_debug.setText(t["btn_kwin_debug"])
+
+        # Footer
+        self.startup_lbl.setText(t["startup_lbl"])
+        self.theme_toggle_btn.setToolTip(t["tooltip_theme"])
 
     def apply_theme(self):
         if self.current_theme == "dark":
@@ -1601,28 +1883,23 @@ class MainWindow(QMainWindow):
         layout.setContentsMargins(40, 25, 40, 25)
         layout.setSpacing(15)
 
-        welcome_title = QLabel("Pardus'a Hoş Geldiniz!")
-        welcome_title.setObjectName("headerTitle")
-        welcome_title.setAlignment(Qt.AlignCenter)
+        self.welcome_title = QLabel()
+        self.welcome_title.setObjectName("headerTitle")
+        self.welcome_title.setAlignment(Qt.AlignCenter)
         
-        welcome_subtitle = QLabel("Aramıza katıldığınız için size çok teşekkür ederiz!")
-        welcome_subtitle.setObjectName("sectionTitle")
-        welcome_subtitle.setAlignment(Qt.AlignCenter)
+        self.welcome_subtitle = QLabel()
+        self.welcome_subtitle.setObjectName("sectionTitle")
+        self.welcome_subtitle.setAlignment(Qt.AlignCenter)
         
-        intro_text = QLabel(
-            "Pardus Geliştirici Ekibi olarak, bizler yapımında ne kadar zevk aldıysak, sizlerin de "
-            "Pardus'u kullanırken o kadar memnun kalacağınızı umut ediyoruz. Aşağıdaki bağlantılar, "
-            "yeni işletim sisteminizi kullanma konusunda sizlere yardımcı olacaktır. Bu vesileyle tecrübenizin "
-            "tadını çıkarın, fikir ve düşüncelerinizi bizlerle paylaşmaktan çekinmeyin."
-        )
-        intro_text.setWordWrap(True)
-        intro_text.setAlignment(Qt.AlignCenter)
-        intro_text.setFont(QFont("Inter", 10))
-        intro_text.setStyleSheet("line-height: 1.5; color: #a9b1d6;" if self.current_theme == "dark" else "color: #5c5f77;")
+        self.intro_text = QLabel()
+        self.intro_text.setWordWrap(True)
+        self.intro_text.setAlignment(Qt.AlignCenter)
+        self.intro_text.setFont(QFont("Inter", 10))
+        self.intro_text.setStyleSheet("line-height: 1.5; color: #a9b1d6;" if self.current_theme == "dark" else "color: #5c5f77;")
 
-        layout.addWidget(welcome_title)
-        layout.addWidget(welcome_subtitle)
-        layout.addWidget(intro_text)
+        layout.addWidget(self.welcome_title)
+        layout.addWidget(self.welcome_subtitle)
+        layout.addWidget(self.intro_text)
         layout.addSpacing(10)
 
         grid_widget = QWidget()
@@ -1630,58 +1907,63 @@ class MainWindow(QMainWindow):
         grid_layout.setContentsMargins(0, 0, 0, 0)
         grid_layout.setSpacing(20)
 
-        columns = [
+        columns_data = [
             {
-                "title": "DÖKÜMANTASYON",
+                "title_key": "col_doc",
                 "links": [
-                    {"text": "Beni oku", "url": "https://www.pardus.org.tr"},
-                    {"text": "Sürüm bilgisi", "url": "https://www.pardus.org.tr/surum-notlari/"},
-                    {"text": "Viki ↗", "url": "https://wiki.pardus.org.tr"}
+                    {"key": "link_readme", "url": "https://www.pardus.org.tr"},
+                    {"key": "link_release", "url": "https://www.pardus.org.tr/surum-notlari/"},
+                    {"key": "link_wiki", "url": "https://wiki.pardus.org.tr"}
                 ]
             },
             {
-                "title": "DESTEK",
+                "title_key": "col_sup",
                 "links": [
-                    {"text": "Forum ↗", "url": "https://forum.pardus.org.tr"},
-                    {"text": "Yazılım ↗", "url": "https://talep.pardus.org.tr"},
-                    {"text": "", "url": ""}
+                    {"key": "link_forum", "url": "https://forum.pardus.org.tr"},
+                    {"key": "link_software", "url": "https://talep.pardus.org.tr"},
+                    {"key": "", "url": ""}
                 ]
             },
             {
-                "title": "PROJE",
+                "title_key": "col_prj",
                 "links": [
-                    {"text": "Projeye katıl", "url": "https://gonullu.pardus.org.tr"},
-                    {"text": "Geliştirme ↗", "url": "https://github.com/pardus"},
-                    {"text": "Bağış yap ↗", "url": "https://www.pardus.org.tr"}
+                    {"key": "link_join", "url": "https://gonullu.pardus.org.tr"},
+                    {"key": "link_dev", "url": "https://github.com/pardus"},
+                    {"key": "link_donate", "url": "https://www.pardus.org.tr/hakkinda/"}
                 ]
             }
         ]
 
-        for col in columns:
+        self.col_title_labels = []
+        self.link_buttons = []
+
+        for col in columns_data:
             col_box = QFrame()
             col_box.setObjectName("cardFrame")
             col_layout = QVBoxLayout(col_box)
             col_layout.setContentsMargins(15, 15, 15, 15)
             col_layout.setSpacing(10)
 
-            col_title = QLabel(col["title"])
+            col_title = QLabel()
             col_title.setFont(QFont("Inter", 11, QFont.Bold))
             col_title.setAlignment(Qt.AlignCenter)
             col_title.setStyleSheet("color: #00f5d4;" if self.current_theme == "dark" else "color: #008e7f;")
             col_layout.addWidget(col_title)
+            self.col_title_labels.append((col_title, col["title_key"]))
 
             for link in col["links"]:
-                if link["text"] == "":
+                if link["key"] == "":
                     dummy = QLabel()
                     dummy.setFixedHeight(38)
                     col_layout.addWidget(dummy)
                     continue
 
-                btn = QPushButton(link["text"])
+                btn = QPushButton()
                 btn.setObjectName("linkGridBtn")
                 btn.setCursor(Qt.PointingHandCursor)
                 btn.clicked.connect(lambda checked, url=link["url"]: webbrowser.open(url))
                 col_layout.addWidget(btn)
+                self.link_buttons.append((btn, link["key"]))
 
             col_layout.addStretch()
             grid_layout.addWidget(col_box)
@@ -1692,19 +1974,19 @@ class MainWindow(QMainWindow):
         bottom_actions_layout = QHBoxLayout()
         bottom_actions_layout.setSpacing(15)
 
-        self.btn_tweaks = QPushButton("Uygulamalar/İyileştirmeler")
+        self.btn_tweaks = QPushButton()
         self.btn_tweaks.setFixedHeight(44)
         self.btn_tweaks.setFont(QFont("Inter", 10, QFont.Bold))
         self.btn_tweaks.setCursor(Qt.PointingHandCursor)
         self.btn_tweaks.clicked.connect(lambda: self.change_page(1))
         
-        self.btn_installer = QPushButton("Uygulama kur")
+        self.btn_installer = QPushButton()
         self.btn_installer.setFixedHeight(44)
         self.btn_installer.setFont(QFont("Inter", 10, QFont.Bold))
         self.btn_installer.setCursor(Qt.PointingHandCursor)
         self.btn_installer.clicked.connect(self.open_package_installer)
 
-        self.btn_trouble = QPushButton("Troubleshooting")
+        self.btn_trouble = QPushButton()
         self.btn_trouble.setFixedHeight(44)
         self.btn_trouble.setFont(QFont("Inter", 10, QFont.Bold))
         self.btn_trouble.setCursor(Qt.PointingHandCursor)
@@ -1729,18 +2011,18 @@ class MainWindow(QMainWindow):
         top_bar = QHBoxLayout(top_bar_widget)
         top_bar.setContentsMargins(40, 20, 40, 10)
         
-        back_btn = QPushButton("❮ Geri")
-        back_btn.setObjectName("backBtn")
-        back_btn.setFixedSize(80, 32)
-        back_btn.setCursor(Qt.PointingHandCursor)
-        back_btn.clicked.connect(lambda: self.change_page(0))
+        self.tweaks_back_btn = QPushButton()
+        self.tweaks_back_btn.setObjectName("backBtn")
+        self.tweaks_back_btn.setFixedSize(80, 32)
+        self.tweaks_back_btn.setCursor(Qt.PointingHandCursor)
+        self.tweaks_back_btn.clicked.connect(lambda: self.change_page(0))
         
-        page_title = QLabel("İnce Ayarlar ve Araçlar")
-        page_title.setObjectName("sectionTitle")
-        page_title.setFont(QFont("Inter", 14, QFont.Bold))
+        self.tweaks_page_title = QLabel()
+        self.tweaks_page_title.setObjectName("sectionTitle")
+        self.tweaks_page_title.setFont(QFont("Inter", 14, QFont.Bold))
         
-        top_bar.addWidget(back_btn)
-        top_bar.addWidget(page_title)
+        top_bar.addWidget(self.tweaks_back_btn)
+        top_bar.addWidget(self.tweaks_page_title)
         top_bar.addStretch()
         main_layout.addWidget(top_bar_widget)
 
@@ -1759,23 +2041,23 @@ class MainWindow(QMainWindow):
         tb_layout.setContentsMargins(20, 15, 20, 15)
         tb_layout.setSpacing(10)
 
-        tb_title = QLabel("İnce Ayarlar")
-        tb_title.setObjectName("groupTitle")
-        tb_layout.addWidget(tb_title)
+        self.tweaks_section_title1 = QLabel()
+        self.tweaks_section_title1.setObjectName("groupTitle")
+        tb_layout.addWidget(self.tweaks_section_title1)
 
         checkbox_grid_widget = QWidget()
         checkbox_grid = QGridLayout(checkbox_grid_widget)
         checkbox_grid.setContentsMargins(0, 0, 0, 0)
         checkbox_grid.setSpacing(12)
 
-        self.chk1 = QCheckBox("Profile-sync-daemon etkinleştirildi.")
-        self.chk2 = QCheckBox("Ananicy Cpp etkinleştirildi.")
+        self.chk1 = QCheckBox()
+        self.chk2 = QCheckBox()
         self.chk2.setChecked(True)
-        self.chk3 = QCheckBox("Pardus Güncelleyici etkinleştirildi.")
+        self.chk3 = QCheckBox()
         self.chk3.setChecked(True)
-        self.chk4 = QCheckBox("Systemd-oomd etkinleştirildi.")
-        self.chk5 = QCheckBox("Bpftune etkinleştirildi.")
-        self.chk6 = QCheckBox("Bluetooth etkinleştirildi.")
+        self.chk4 = QCheckBox()
+        self.chk5 = QCheckBox()
+        self.chk6 = QCheckBox()
         self.chk6.setChecked(True)
 
         checkbox_grid.addWidget(self.chk1, 0, 0)
@@ -1797,50 +2079,50 @@ class MainWindow(QMainWindow):
         t_layout.setContentsMargins(20, 15, 20, 15)
         t_layout.setSpacing(10)
 
-        t_title = QLabel("Araçlar")
-        t_title.setObjectName("groupTitle")
-        t_layout.addWidget(t_title)
+        self.tweaks_section_title2 = QLabel()
+        self.tweaks_section_title2.setObjectName("groupTitle")
+        t_layout.addWidget(self.tweaks_section_title2)
 
         tools_grid_widget = QWidget()
         tools_grid = QGridLayout(tools_grid_widget)
         tools_grid.setContentsMargins(0, 0, 0, 0)
         tools_grid.setSpacing(10)
 
-        btn_sys_update = QPushButton("Sistem güncellemesi")
-        btn_sys_update.clicked.connect(self.simulate_update_packages)
-        btn_sys_update.setCursor(Qt.PointingHandCursor)
+        self.btn_sys_update = QPushButton()
+        self.btn_sys_update.clicked.connect(self.simulate_update_packages)
+        self.btn_sys_update.setCursor(Qt.PointingHandCursor)
 
-        btn_mirrors = QPushButton("Yansıları hıza göre sırala")
-        btn_mirrors.clicked.connect(self.simulate_mirrors)
-        btn_mirrors.setCursor(Qt.PointingHandCursor)
+        self.btn_mirrors = QPushButton()
+        self.btn_mirrors.clicked.connect(self.simulate_mirrors)
+        self.btn_mirrors.setCursor(Qt.PointingHandCursor)
 
-        btn_orphans = QPushButton("Artık (orphan) paketleri kaldır")
-        btn_orphans.clicked.connect(self.simulate_remove_orphans)
-        btn_orphans.setCursor(Qt.PointingHandCursor)
+        self.btn_orphans = QPushButton()
+        self.btn_orphans.clicked.connect(self.simulate_remove_orphans)
+        self.btn_orphans.setCursor(Qt.PointingHandCursor)
 
-        btn_vram = QPushButton("VRAM yönetimini kur")
-        btn_vram.clicked.connect(self.simulate_vram)
-        btn_vram.setCursor(Qt.PointingHandCursor)
+        self.btn_vram = QPushButton()
+        self.btn_vram.clicked.connect(self.simulate_vram)
+        self.btn_vram.setCursor(Qt.PointingHandCursor)
 
-        btn_winboat = QPushButton("Winboat kur")
-        btn_winboat.clicked.connect(self.simulate_winboat)
-        btn_winboat.setCursor(Qt.PointingHandCursor)
+        self.btn_winboat = QPushButton()
+        self.btn_winboat.clicked.connect(self.simulate_winboat)
+        self.btn_winboat.setCursor(Qt.PointingHandCursor)
 
-        btn_games = QPushButton("Oyun paketlerini kur")
-        btn_games.clicked.connect(self.simulate_games)
-        btn_games.setCursor(Qt.PointingHandCursor)
+        self.btn_games = QPushButton()
+        self.btn_games.clicked.connect(self.simulate_games)
+        self.btn_games.setCursor(Qt.PointingHandCursor)
 
-        btn_dns = QPushButton("DNS sunucusunu değiştir")
-        btn_dns.clicked.connect(self.simulate_dns)
-        btn_dns.setCursor(Qt.PointingHandCursor)
+        self.btn_dns = QPushButton()
+        self.btn_dns.clicked.connect(self.simulate_dns)
+        self.btn_dns.setCursor(Qt.PointingHandCursor)
 
-        tools_grid.addWidget(btn_sys_update, 0, 0)
-        tools_grid.addWidget(btn_mirrors, 0, 1)
-        tools_grid.addWidget(btn_orphans, 0, 2)
-        tools_grid.addWidget(btn_vram, 1, 0)
-        tools_grid.addWidget(btn_winboat, 1, 1)
-        tools_grid.addWidget(btn_games, 1, 2)
-        tools_grid.addWidget(btn_dns, 2, 0, 1, 3)
+        tools_grid.addWidget(self.btn_sys_update, 0, 0)
+        tools_grid.addWidget(self.btn_mirrors, 0, 1)
+        tools_grid.addWidget(self.btn_orphans, 0, 2)
+        tools_grid.addWidget(self.btn_vram, 1, 0)
+        tools_grid.addWidget(self.btn_winboat, 1, 1)
+        tools_grid.addWidget(self.btn_games, 1, 2)
+        tools_grid.addWidget(self.btn_dns, 2, 0, 1, 3)
 
         t_layout.addWidget(tools_grid_widget)
         layout.addWidget(tools_box)
@@ -1852,25 +2134,25 @@ class MainWindow(QMainWindow):
         a_layout.setContentsMargins(20, 15, 20, 15)
         a_layout.setSpacing(10)
 
-        a_title = QLabel("Uygulamalar")
-        a_title.setObjectName("groupTitle")
-        a_layout.addWidget(a_title)
+        self.tweaks_section_title3 = QLabel()
+        self.tweaks_section_title3.setObjectName("groupTitle")
+        a_layout.addWidget(self.tweaks_section_title3)
 
         apps_btn_layout = QHBoxLayout()
         apps_btn_layout.setSpacing(15)
 
-        btn_open_installer = QPushButton("Pardus Paket Yükleyici")
-        btn_open_installer.setFixedHeight(38)
-        btn_open_installer.setCursor(Qt.PointingHandCursor)
-        btn_open_installer.clicked.connect(self.open_package_installer)
+        self.btn_open_installer = QPushButton()
+        self.btn_open_installer.setFixedHeight(38)
+        self.btn_open_installer.setCursor(Qt.PointingHandCursor)
+        self.btn_open_installer.clicked.connect(self.open_package_installer)
 
-        btn_open_kernel = QPushButton("Pardus Çekirdek Yöneticisi")
-        btn_open_kernel.setFixedHeight(38)
-        btn_open_kernel.setCursor(Qt.PointingHandCursor)
-        btn_open_kernel.clicked.connect(lambda: self.change_page(2))
+        self.btn_open_kernel = QPushButton()
+        self.btn_open_kernel.setFixedHeight(38)
+        self.btn_open_kernel.setCursor(Qt.PointingHandCursor)
+        self.btn_open_kernel.clicked.connect(lambda: self.change_page(2))
 
-        apps_btn_layout.addWidget(btn_open_installer)
-        apps_btn_layout.addWidget(btn_open_kernel)
+        apps_btn_layout.addWidget(self.btn_open_installer)
+        apps_btn_layout.addWidget(self.btn_open_kernel)
         a_layout.addLayout(apps_btn_layout)
 
         layout.addWidget(apps_box)
@@ -1887,26 +2169,23 @@ class MainWindow(QMainWindow):
         layout.setSpacing(15)
 
         top_bar = QHBoxLayout()
-        back_btn = QPushButton("❮ Geri")
-        back_btn.setObjectName("backBtn")
-        back_btn.setFixedSize(80, 32)
-        back_btn.setCursor(Qt.PointingHandCursor)
-        back_btn.clicked.connect(lambda: self.change_page(1))
+        self.kernel_back_btn = QPushButton()
+        self.kernel_back_btn.setObjectName("backBtn")
+        self.kernel_back_btn.setFixedSize(80, 32)
+        self.kernel_back_btn.setCursor(Qt.PointingHandCursor)
+        self.kernel_back_btn.clicked.connect(lambda: self.change_page(1))
         
-        page_title = QLabel("Çekirdek Yöneticisi (Kernel Manager)")
-        page_title.setObjectName("sectionTitle")
+        self.kernel_page_title = QLabel()
+        self.kernel_page_title.setObjectName("sectionTitle")
         
-        top_bar.addWidget(back_btn)
-        top_bar.addWidget(page_title)
+        top_bar.addWidget(self.kernel_back_btn)
+        top_bar.addWidget(self.kernel_page_title)
         top_bar.addStretch()
         layout.addLayout(top_bar)
 
-        desc_label = QLabel(
-            "Debian/Pardus için optimize edilmiş çekirdek paketlerini kurabilir ve geçiş yapabilirsiniz.\n"
-            "Mevcut sisteminizde çalışan sürüm: <b>" + self.kernel_info + "</b>"
-        )
-        desc_label.setObjectName("sectionDesc")
-        layout.addWidget(desc_label)
+        self.kernel_desc_label = QLabel()
+        self.kernel_desc_label.setObjectName("sectionDesc")
+        layout.addWidget(self.kernel_desc_label)
 
         scroll_area = QScrollArea()
         scroll_area.setWidgetResizable(True)
@@ -1921,6 +2200,8 @@ class MainWindow(QMainWindow):
             {"id": "lts", "name": "linux-image-6.1.0-amd64", "desc": "Uzun Süreli Desteklenen Çekirdek (Debian Stable)"},
             {"id": "liquorix", "name": "linux-image-liquorix-amd64", "desc": "Liquorix Yüksek Performanslı Oyun ve Masaüstü Çekirdeği"}
         ]
+
+        self.kernel_widgets = []
 
         for k in self.kernels:
             card = QFrame()
@@ -1940,12 +2221,6 @@ class MainWindow(QMainWindow):
 
             k_title = QLabel()
             k_title.setObjectName("cardTitle")
-            
-            is_currently_running = (k["id"] == "default")
-            if is_currently_running:
-                k_title.setText(k["name"] + f" <span style='color: {'#00f5d4' if self.current_theme == 'dark' else '#00a896'}; font-size: 10px; font-weight: bold;'>[ AKTİF ]</span>")
-            else:
-                k_title.setText(k["name"])
             k_title.setFont(QFont("Inter", 12, QFont.Bold))
 
             k_desc = QLabel(k["desc"])
@@ -1960,17 +2235,22 @@ class MainWindow(QMainWindow):
             btn_layout.setContentsMargins(0, 0, 0, 0)
             btn_layout.setSpacing(8)
 
+            is_currently_running = (k["id"] == "default")
+            status_lbl = None
+            install_btn = None
+            remove_btn = None
+
             if is_currently_running:
-                status_lbl = QLabel("Çalışıyor")
+                status_lbl = QLabel()
                 status_lbl.setStyleSheet("color: #00f5d4; font-weight: bold;" if self.current_theme == "dark" else "color: #008e7f; font-weight: bold;")
                 btn_layout.addWidget(status_lbl)
             else:
-                install_btn = QPushButton("Kur")
+                install_btn = QPushButton()
                 install_btn.setObjectName("primaryActionBtn")
                 install_btn.clicked.connect(lambda checked, kn=k["name"]: self.simulate_kernel_install(kn))
                 install_btn.setCursor(Qt.PointingHandCursor)
                 
-                remove_btn = QPushButton("Kaldır")
+                remove_btn = QPushButton()
                 remove_btn.setObjectName("dangerActionBtn")
                 remove_btn.clicked.connect(lambda checked, kn=k["name"]: self.simulate_kernel_remove(kn))
                 remove_btn.setCursor(Qt.PointingHandCursor)
@@ -1980,6 +2260,16 @@ class MainWindow(QMainWindow):
 
             card_layout.addWidget(btn_container)
             scroll_layout.addWidget(card)
+
+            self.kernel_widgets.append({
+                "id": k["id"],
+                "name": k["name"],
+                "k_title": k_title,
+                "k_desc": k_desc,
+                "status_lbl": status_lbl,
+                "install_btn": install_btn,
+                "remove_btn": remove_btn
+            })
 
         scroll_content.setLayout(scroll_layout)
         scroll_area.setWidget(scroll_content)
@@ -1998,17 +2288,17 @@ class MainWindow(QMainWindow):
         top_bar = QHBoxLayout(top_bar_widget)
         top_bar.setContentsMargins(40, 20, 40, 10)
         
-        back_btn = QPushButton("❮ Geri")
-        back_btn.setObjectName("backBtn")
-        back_btn.setFixedSize(80, 32)
-        back_btn.setCursor(Qt.PointingHandCursor)
-        back_btn.clicked.connect(lambda: self.change_page(0))
+        self.trouble_back_btn = QPushButton()
+        self.trouble_back_btn.setObjectName("backBtn")
+        self.trouble_back_btn.setFixedSize(80, 32)
+        self.trouble_back_btn.setCursor(Qt.PointingHandCursor)
+        self.trouble_back_btn.clicked.connect(lambda: self.change_page(0))
         
-        page_title = QLabel("Sorun Giderme (Troubleshooting)")
-        page_title.setObjectName("sectionTitle")
+        self.trouble_page_title = QLabel()
+        self.trouble_page_title.setObjectName("sectionTitle")
         
-        top_bar.addWidget(back_btn)
-        top_bar.addWidget(page_title)
+        top_bar.addWidget(self.trouble_back_btn)
+        top_bar.addWidget(self.trouble_page_title)
         top_bar.addStretch()
         main_layout.addWidget(top_bar_widget)
 
@@ -2026,36 +2316,36 @@ class MainWindow(QMainWindow):
         tb_layout.setContentsMargins(25, 25, 25, 25)
         tb_layout.setSpacing(15)
 
-        btn_clear_cache = QPushButton("Önbellekteki paketleri temizle")
-        btn_clear_cache.setFixedHeight(40)
-        btn_clear_cache.setCursor(Qt.PointingHandCursor)
-        btn_clear_cache.clicked.connect(self.simulate_clean_cache)
+        self.btn_clear_cache = QPushButton()
+        self.btn_clear_cache.setFixedHeight(40)
+        self.btn_clear_cache.setCursor(Qt.PointingHandCursor)
+        self.btn_clear_cache.clicked.connect(self.simulate_clean_cache)
 
-        btn_db_lock = QPushButton("Apt/dpkg veritabanı kilidini kaldır")
-        btn_db_lock.setFixedHeight(40)
-        btn_db_lock.setCursor(Qt.PointingHandCursor)
-        btn_db_lock.clicked.connect(self.simulate_remove_lock)
+        self.btn_db_lock = QPushButton()
+        self.btn_db_lock.setFixedHeight(40)
+        self.btn_db_lock.setCursor(Qt.PointingHandCursor)
+        self.btn_db_lock.clicked.connect(self.simulate_remove_lock)
 
-        btn_keyring = QPushButton("Anahtar halkalarını sıfırla")
-        btn_keyring.setFixedHeight(40)
-        btn_keyring.setCursor(Qt.PointingHandCursor)
-        btn_keyring.clicked.connect(self.simulate_keyring)
+        self.btn_keyring = QPushButton()
+        self.btn_keyring.setFixedHeight(40)
+        self.btn_keyring.setCursor(Qt.PointingHandCursor)
+        self.btn_keyring.clicked.connect(self.simulate_keyring)
 
-        btn_reinstall_all = QPushButton("Tüm paketleri yeniden kur")
-        btn_reinstall_all.setFixedHeight(40)
-        btn_reinstall_all.setCursor(Qt.PointingHandCursor)
-        btn_reinstall_all.clicked.connect(self.simulate_reinstall_all)
+        self.btn_reinstall_all = QPushButton()
+        self.btn_reinstall_all.setFixedHeight(40)
+        self.btn_reinstall_all.setCursor(Qt.PointingHandCursor)
+        self.btn_reinstall_all.clicked.connect(self.simulate_reinstall_all)
 
-        btn_kwin_debug = QPushButton("Pardus Sistem ve Hata Günlüklerini Göster")
-        btn_kwin_debug.setFixedHeight(40)
-        btn_kwin_debug.setCursor(Qt.PointingHandCursor)
-        btn_kwin_debug.clicked.connect(self.open_log_viewer)
+        self.btn_kwin_debug = QPushButton()
+        self.btn_kwin_debug.setFixedHeight(40)
+        self.btn_kwin_debug.setCursor(Qt.PointingHandCursor)
+        self.btn_kwin_debug.clicked.connect(self.open_log_viewer)
 
-        tb_layout.addWidget(btn_clear_cache)
-        tb_layout.addWidget(btn_db_lock)
-        tb_layout.addWidget(btn_keyring)
-        tb_layout.addWidget(btn_reinstall_all)
-        tb_layout.addWidget(btn_kwin_debug)
+        tb_layout.addWidget(self.btn_clear_cache)
+        tb_layout.addWidget(self.btn_db_lock)
+        tb_layout.addWidget(self.btn_keyring)
+        tb_layout.addWidget(self.btn_reinstall_all)
+        tb_layout.addWidget(self.btn_kwin_debug)
 
         layout.addWidget(trouble_box)
         layout.addStretch()
@@ -2065,7 +2355,7 @@ class MainWindow(QMainWindow):
         self.stacked_widget.addWidget(page)
 
     def open_package_installer(self):
-        installer = PackageInstallerWindow(self, is_dark_mode=(self.current_theme == "dark"))
+        installer = PackageInstallerWindow(self, is_dark_mode=(self.current_theme == "dark"), lang_idx=self.lang_combo.currentIndex())
         installer.setStyleSheet(self.styleSheet())
         installer.exec_()
 
