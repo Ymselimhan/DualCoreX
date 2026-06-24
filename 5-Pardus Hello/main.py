@@ -1812,12 +1812,12 @@ class MainWindow(QMainWindow):
 
         footer_layout.addStretch()
 
-        startup_lbl = QLabel("Başlangıçta aç:")
-        startup_lbl.setStyleSheet("font-size: 11px; font-weight: bold;" + ("color: #a9b1d6;" if self.current_theme == "dark" else "color: #5c5f77;"))
+        self.startup_lbl = QLabel("Başlangıçta aç:")
+        self.startup_lbl.setStyleSheet("font-size: 11px; font-weight: bold;" + ("color: #a9b1d6;" if self.current_theme == "dark" else "color: #5c5f77;"))
         self.startup_toggle = ToggleSwitch(main_window=self)
         self.startup_toggle.setChecked(True)
         
-        footer_layout.addWidget(startup_lbl)
+        footer_layout.addWidget(self.startup_lbl)
         footer_layout.addWidget(self.startup_toggle)
         
         size_grip = QSizeGrip(self)
