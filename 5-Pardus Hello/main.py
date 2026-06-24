@@ -12,8 +12,30 @@ import sys
 import platform
 import webbrowser
 import subprocess
-from PyQt5.QtCore import Qt, QTimer, QSize, QPoint, QRect
+from PyQt5.QtCore import Qt, QTimer, QSize, QPoint, QRect, qInstallMessageHandler
 from PyQt5.QtGui import QIcon, QFont, QPixmap, QColor, QPainter, QBrush, QPen
+
+# ==============================================================================
+# HATA VE UYARI MESAJI FİLTRELEME (Log Suppressor)
+# ==============================================================================
+
+def qt_message_handler(mode, context, message):
+    # Wayland ve QSocketNotifier kaynaklı zararsız Qt uyarılarını terminalde gizler
+    ignored_keywords = [
+        "QSocketNotifier",
+        "requestActivate",
+        "Wayland does not support",
+        "runtime directory"
+    ]
+    if any(kw in message for kw in ignored_keywords):
+        return
+    
+    # Diğer kritik sistem mesajlarını ve hatalarını standart hata akışına yazdırır
+    import sys
+    sys.stderr.write(f"{message}\n")
+
+qInstallMessageHandler(qt_message_handler)
+
 from PyQt5.QtWidgets import (
     QApplication,
     QMainWindow,
